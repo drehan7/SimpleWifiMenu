@@ -1,13 +1,30 @@
 CC=gcc
-CFLAGS=-Isrc -lraylib -Wall -pedantic
+CFLAGS=-Wall -pedantic -Wextra -fcommon
+LDFLAGS=-Isrc -lraylib
+SRC=src
+SOURCES=$(wildcard $(SRC)/*.c)
+HEADERS=$(wildcard $(SRC)/*.h)
+OBJ=Objs
+OBJECTS=$(patsubst $(SRC)/%.c,$(OBJ)/%.o,$(SOURCES))
+TARGET=out
 
-#DEPS
-
-# %.o: %.c #$(DEPS)
-# 	$(CC) -c -o $@ $< $(CFLAGS)
-
-default:
-	$(CC) -o out src/main.c $(CFLAGS)
+build: $(TARGET)
 
 clean:
-	rm out
+	rm -r $(OBJ)/*
+	@#
+
+.PHONY: build clean
+
+##
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(CFLAGS) $^ -o $@
+	@echo "Build Successful!"
+
+$(OBJECTS): $(SOURCES) $(HEADERS)
+	@echo Compiling $^
+	# FILE=$(patsubst $(OBJ)/%.o,$(SRC)/%.c,$@)
+	# @mkdir -p $(@D)
+	# $(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) -c $(patsubst $(OBJ)/%.o,$(SRC)/%.c,$@) -o $@
