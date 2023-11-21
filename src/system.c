@@ -1,22 +1,23 @@
-#include <stdlib.h>
+#include "system.h"
 
-int main() {
-    // char* command = "nmcli device wifi list";
-    // system(command);
+char** sys_get_ssids()
+{
+        char** ssids = malloc(MAX_NETWORKS * sizeof(char*));
 
-    FILE* fp;
-    int status = 0;
-    char path[256];
+        char* buff[256];
 
-    fp = popen("nmcli device wifi list", "r");
+        FILE* proc = popen("nmcli -f ssid device wifi list | tail -n +2", "r");
+        if (proc == NULL)
+        {
+                printf("Error running command\n");
+                return ssids;
+        }
 
-    while (fgets(path, 256, fp) != NULL)
-    {
-        printf("%s", path);
-    }
+        while (fgets(buff, sizeof buff, proc) != NULL)
+        {
+                printf("WUD test: %s\n", buff);
+        }
 
-    status = pclose(fp);
-    printf("\nStatus: %d\n", status);
-
+        return ssids;
 }
 

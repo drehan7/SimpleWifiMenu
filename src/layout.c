@@ -1,5 +1,4 @@
-#include <raylib.h>
-#include <stdio.h>
+#include "layout.h"
 
 Rectangle draw_wifi_container() 
 {

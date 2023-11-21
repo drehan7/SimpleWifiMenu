@@ -48,6 +48,7 @@ elif [ `echo $result | grep -i "nothing to be done" | wc -l` -gt 0 ]; then
 
         echo "No changes";
         [ $run -eq 1 ] && ./out;
+        success=1
 else
         success=0
 fi
@@ -59,4 +60,6 @@ fi
 if [ "$success" == "0" ]; then
         echo "Build FAILED..."
         cat $log
+else
+        echo $result
 fi
