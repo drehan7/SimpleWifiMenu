@@ -5,19 +5,16 @@
 #include <stdio.h>
 
 #define MAX_NETWORKS 50
-// #define DEBUG 0
-
-typedef char* SSID;
 
 typedef struct {
-        SSID* ssids;
+        char** ssid_list;
         size_t count;
         size_t page;
 } SSIDS;
 
 typedef struct {
         char* bssid;
-        SSID ssid;
+        char* ssid;
         unsigned int channel;
         unsigned int rate;
         unsigned int signal;
@@ -27,6 +24,7 @@ typedef struct {
 
 SSIDS* get_ssids(void);
 
-char* get_connected_ssid(void);
+void refresh_ssids(SSIDS* state, size_t count);
+char* get_connected_ssid(void); // UNIMPL
 
 #endif //NETWORK_H

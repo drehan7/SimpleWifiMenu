@@ -37,10 +37,25 @@ SSIDS* get_ssids(void)
         }
         printf("Network size: %ld\n", count);
         ssids_t->count = count;
-        ssids_t->ssids = ssids;
+        ssids_t->ssid_list = ssids;
         ssids_t->page = 0;
 
         return ssids_t;
+}
+
+void refresh_ssids(SSIDS* s, size_t count)
+{
+        SSIDS* new_ssids = get_ssids();
+        if (new_ssids == NULL) return;
+
+        count = (count > s->count) ? s->count : count;
+
+        for (size_t i = 0; i < count; ++i)
+        {
+                s->ssid_list[i] = new_ssids->ssid_list[i];
+        }
+
+        free(new_ssids);
 }
 
 char* get_connected_ssid()
