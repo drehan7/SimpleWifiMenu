@@ -27,4 +27,6 @@ SSIDS* get_ssids(void);
 void refresh_ssids(SSIDS* state, size_t count);
 char* get_connected_ssid(void); // UNIMPL
 
+int s_find(char** set, size_t set_l, char* f);
+
 #endif //NETWORK_H

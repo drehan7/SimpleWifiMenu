@@ -4,7 +4,7 @@ static State *state = NULL;
 
 void state_ssid_prev_page(void)
 {
-
+// TODO: impl
 }
 
 void render_loading(void)
@@ -19,15 +19,33 @@ void render_loading(void)
         EndDrawing();
 }
 
-void render_config_panel(void)
+void render_layout()
 {
-        Rectangle container = {
-                .x = 450,
-                .y = 50,
-                .width = 500,
-                .height = 700,
-        };
-        DrawRectangleLinesEx(container, 1.5f, RED);
+        // DEBUG - layout containers
+        DrawRectangleLinesEx(state->layout->ssid_container, 0.7f, YELLOW);
+        DrawRectangleLinesEx(state->layout->info_container, 1.5f, MAGENTA);
+        DrawRectangleLinesEx(state->layout->nav_container, 1.5f, RED);
+
+        // Nav Buttons
+
+        DrawRectangleLinesEx(state->layout->back_button, 0.7f, GREEN);
+        DrawRectangleLinesEx(state->layout->next_button, 0.7f, GREEN);
+        
+        DrawTextEx(state->font, "Back",
+                        (Vector2)
+                        {
+                                state->layout->back_button.x+10,
+                                state->layout->back_button.y+5
+                        },
+                30, 2, RAYWHITE );
+
+        DrawTextEx(state->font, "Next",
+                        (Vector2)
+                        {
+                                state->layout->next_button.x+10,
+                                state->layout->next_button.y+5
+                        },
+                30, 2, RAYWHITE );
 }
 
 void render_page_count(void)
@@ -37,10 +55,22 @@ void render_page_count(void)
 
         char* page_number = malloc(15 * sizeof(char));
         size_t curr_page_num = state->ssids->page;
+
         sprintf(page_number, "Page: %d", curr_page_num + 1);
         
         DrawTextEx(state->font, page_number, (Vector2){30, state->screenH - 40}, 30, 2, GREEN);
-        DrawTextEx(state->font, total_networks, (Vector2){30, state->screenH - 70}, 30, 2, GREEN);
+        DrawTextEx(state->font, total_networks, (Vector2){150, state->screenH - 40}, 30, 2, GREEN);
+}
+
+void render_page_buttons(void)
+{
+        // Rectangle b_button = { .width = 100, .height = 75, .x = x, .y = (sta) };
+        // Rectangle n_button = { .width = 100, .height = 75, .x = x+150, .y = y+50 };
+        // DrawRectangleLinesEx(b_button, 0.7f, GREEN);
+        // DrawRectangleLinesEx(n_button, 0.7f, GREEN);
+        // 
+        // DrawTextEx(state->font, "Back", (Vector2){b_button.x+10, b_button.y+5}, 30, 2, RAYWHITE );
+        // DrawTextEx(state->font, "Next", (Vector2){n_button.x+10, n_button.y+5}, 30, 2, RAYWHITE );
 }
 
 // Maybe good to store these in state ??
@@ -56,6 +86,59 @@ void render_info_panel(void)
         DrawRectangleLinesEx(container, 1.5f, SKYBLUE);
 }
 
+PositionSettings* init_position_settings()
+{
+        PositionSettings* pos = malloc(1 * sizeof(*pos));
+
+        if (pos == NULL) 
+        {
+                printf("Could not allocate memory -- init_position_settings()\n");
+                exit(1);
+        }
+
+        Rectangle ssid_container = {
+                .x         = SSID_CONTAINERX,
+                .y         = SSID_CONTAINERY,
+                .width     = state->screenW / 3,
+                .height    = (state->screenH / 4) * 3,
+        };
+
+        Rectangle info_container = {
+                .x         = INFO_CONTAINERX,
+                .y         = INFO_CONTAINERY,
+                .width     = WIDTH / 2,
+                .height    = (HEIGHT / 4) * 3,
+        };
+
+        Rectangle nav_container = {
+                .x         = ssid_container.x,
+                .y         = ssid_container.height + 50,
+                .width     = ssid_container.width,
+                .height    = (HEIGHT - ssid_container.height) / 2,
+        };
+
+        Rectangle b_button = { 
+                .width     = nav_container.width / 4,
+                .height    = nav_container.height - 10,
+                .x         = nav_container.x + 10,
+                .y         = nav_container.y + 10,
+        };
+
+        Rectangle n_button = { 
+                .width     = nav_container.width / 4,
+                .height    = nav_container.height - 10,
+                .x         = b_button.x + (nav_container.width / 2),
+                .y         = nav_container.y + 10,
+        };
+
+        pos->ssid_container = ssid_container;
+        pos->info_container = info_container;
+        pos->nav_container = nav_container;
+        pos->back_button = b_button;
+        pos->next_button = n_button;
+
+        return pos;
+}
 
 Vector2 state_init(void)
 {
@@ -69,16 +152,18 @@ Vector2 state_init(void)
         state->ssids = get_ssids();
         state->screenW = WIDTH;
         state->screenH = HEIGHT;
+        state->appcolor = MYCOLOR;
 
+        state->layout = init_position_settings();
 
         printf("State init complete: %d\n", state->ssids->count);
 
         return (Vector2) { .x = WIDTH, .y = HEIGHT };
 }
 
-void state_load_font(char* font_path)
+void state_load_font(char* font_path) 
 {
-        state->font = LoadFont(font_path);
+        if (state != NULL) state->font = LoadFont(font_path);
 }
 
 void state_update(void)
@@ -86,28 +171,29 @@ void state_update(void)
         while (state->ssids == NULL)
                 render_loading();
 
+        // Debug stuff. might extend
         if (IsKeyPressed(KEY_R))
         {
                 ClearBackground(BLACK);
                 refresh_ssids(state->ssids, 5); // TODO come up with default count
         }
-        //rgb(39,54,67)
-        Color mycolor = (Color){39,54,67,255};
 
-        ClearBackground(mycolor);
+        ClearBackground(state->appcolor);
         BeginDrawing();
 
+                // Draw containers and buttons
+                render_layout();
+
                 // Starting Position for Wifi Networks
-                int x = 20;
-                int y = 50;
-                int ssid_pos_y = y;
+                int x = SSID_CONTAINERX + 20;
+                int y = SSID_CONTAINERY + 20;
 
                 size_t start_idx = state->ssids->page * 5;
-                for (size_t i = start_idx; i < 5; ++i)
+                size_t end_idx = (start_idx + 5 > state->ssids->count) ? state->ssids->count-1 : start_idx + 5;
+                for (size_t i = start_idx; i < end_idx; ++i)
                 {
                         Rectangle button = { .width = 300, .height = 75, .x = x, .y = y };
                         DrawRectangleLinesEx(button, 0.7f, BLACK);
-                        // DrawText(state->ssids->ssids[i], x + 30, y+20, 25, RAYWHITE);
                         Vector2 text_pos = { .x = x+30, .y = y+20 };
                         DrawTextEx(state->font, state->ssids->ssid_list[i], text_pos, 30, 2, WHITE );
                         
@@ -115,44 +201,29 @@ void state_update(void)
                 }
                 // WUD NOTE: For next starting idx, mult 5 by page
 
-                // TODO: Fix magic numbers
-                x += 20;
-                // Back & Next Buttons
-                Rectangle b_button = { .width = 100, .height = 75, .x = x, .y = y+50 };
-                Rectangle n_button = { .width = 100, .height = 75, .x = x+150, .y = y+50 };
-                DrawRectangleLinesEx(b_button, 0.7f, GREEN);
-                DrawRectangleLinesEx(n_button, 0.7f, GREEN);
-                
-                DrawTextEx(state->font, "Back", (Vector2){b_button.x+10, b_button.y+5}, 30, 2, RAYWHITE );
-                DrawTextEx(state->font, "Next", (Vector2){n_button.x+10, n_button.y+5}, 30, 2, RAYWHITE );
                 
                 // User clicked back or next button
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
                 {
                         Vector2 mouse_pos = GetMousePosition();
 
-                        if (CheckCollisionPointRec(mouse_pos, b_button))
+                        if (CheckCollisionPointRec(mouse_pos, state->layout->back_button))
                         {
-                                // state_ssid_prev_page();
                                 if (state->ssids->page > 0) {
                                         state->ssids->page--;
-                                        y = 50;
                                 }
-                                printf("BACK BUTTON\n");
-
                         }
-                        else if (CheckCollisionPointRec(mouse_pos, n_button)) 
+                        else if (CheckCollisionPointRec(mouse_pos, state->layout->next_button)) 
                         {
-                                // state_ssid_next_page();
-                                printf("NEXt BUTTON\n");
-                                state->ssids->page++;
-                                y = 50;
+                                size_t l_idx = state->ssids->count - 1;
+                                size_t s_idx = (state->ssids->page + 1) * 5;
+                                
+                                if (l_idx > s_idx)
+                                        state->ssids->page++;
                         }
                 }
 
-                render_config_panel();
                 render_page_count();
-                // render_info_panel();
 
         EndDrawing();
 }

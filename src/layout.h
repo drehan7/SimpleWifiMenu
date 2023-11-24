@@ -7,8 +7,30 @@
 #include <string.h>
 #include "network.h"
 
+#define MYCOLOR CLITERAL(Color){ 39,54,67,255 }
+
 #define WIDTH 1000
 #define HEIGHT 800
+
+#define SSID_CONTAINERX 20
+#define SSID_CONTAINERY 50
+
+#define INFO_CONTAINERX 400
+#define INFO_CONTAINERY 50
+
+#define INFO_CONTAINERW 500
+
+
+typedef struct {
+
+        Rectangle ssid_container;
+        Rectangle info_container;
+        Rectangle nav_container;
+        Rectangle back_button;
+        Rectangle next_button;
+
+} PositionSettings;
+
 
 // State of application
 typedef struct {
@@ -18,7 +40,12 @@ typedef struct {
         size_t screenW;
         size_t screenH;
         Font font;
+        Color appcolor;
+
+        // Containers
+         PositionSettings* layout;
 } State ;
+
 
 Vector2 state_init(void);
 void state_update(void);
@@ -28,9 +55,12 @@ void state_ssid_prev_page(void);
 void state_ssid_next_page(void);
 
 void render_loading(void);
+void render_layout();
 
 void render_config_panel(void);
 void render_info_panel(void);
+
+PositionSettings* init_position_settings();
 
 
 
