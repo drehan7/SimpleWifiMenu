@@ -188,6 +188,7 @@ void state_update(void)
                 int x = SSID_CONTAINERX + 20;
                 int y = SSID_CONTAINERY + 20;
 
+                // Render Networks in ssid_container
                 size_t start_idx = state->ssids->page * 5;
                 size_t end_idx = (start_idx + 5 > state->ssids->count) ? state->ssids->count-1 : start_idx + 5;
                 for (size_t i = start_idx; i < end_idx; ++i)
@@ -195,7 +196,7 @@ void state_update(void)
                         Rectangle button = { .width = 300, .height = 75, .x = x, .y = y };
                         DrawRectangleLinesEx(button, 0.7f, BLACK);
                         Vector2 text_pos = { .x = x+30, .y = y+20 };
-                        DrawTextEx(state->font, state->ssids->ssid_list[i], text_pos, 30, 2, WHITE );
+                        DrawTextEx(state->font, state->ssids->ssid_list[i], text_pos, 30, 2, RAYWHITE );
                         
                         y = y + 100;
                 }
