@@ -172,11 +172,10 @@ Vector2 state_init(void)
         return (Vector2) { .x = WIDTH, .y = HEIGHT };
 }
 
-void state_load_font(char* font_path, int font_size) 
+void state_load_font(char* font_path) 
 {
         if (state != NULL) 
                 state->font = LoadFont(font_path);
-                // state->font = LoadFontEx(font_path, font_size, 0, 250);
 }
 
 void state_update(void)

@@ -15,8 +15,7 @@ int main()
         // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
         InitWindow(screenXY.x, screenXY.y, "WiFi Gui");
 
-        state_load_font(FONT_PATH, FONT_SIZE);
-        // SetTextLineSpacing(48);
+        state_load_font(FONT_PATH);
 
         printf("Before window open\n");
         // while(!WindowShouldClose())
