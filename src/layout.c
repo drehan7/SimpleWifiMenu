@@ -2,9 +2,18 @@
 
 static State *state = NULL;
 
-void state_ssid_prev_page(void)
+// void state_ssid_prev_page(void)
+// {
+// // TODO: impl
+// }
+
+// void check_ssid_clicked(Vector2* mouse_pos)
+// {
+// }
+
+bool state_ok()
 {
-// TODO: impl
+        return (!WindowShouldClose() && IsFontReady(state->font));
 }
 
 void render_loading(void)
@@ -27,7 +36,6 @@ void render_layout()
         DrawRectangleLinesEx(state->layout->nav_container, 1.5f, RED);
 
         // Nav Buttons
-
         DrawRectangleLinesEx(state->layout->back_button, 0.7f, GREEN);
         DrawRectangleLinesEx(state->layout->next_button, 0.7f, GREEN);
         
@@ -60,6 +68,9 @@ void render_page_count(void)
         
         DrawTextEx(state->font, page_number, (Vector2){30, state->screenH - 40}, 30, 2, GREEN);
         DrawTextEx(state->font, total_networks, (Vector2){150, state->screenH - 40}, 30, 2, GREEN);
+        
+        // free(total_networks);
+        // free(page_number);
 }
 
 void render_page_buttons(void)
@@ -99,15 +110,15 @@ PositionSettings* init_position_settings()
         Rectangle ssid_container = {
                 .x         = SSID_CONTAINERX,
                 .y         = SSID_CONTAINERY,
-                .width     = state->screenW / 3,
-                .height    = (state->screenH / 4) * 3,
+                .width     = (int)(state->screenW / 3),
+                .height    = (int)((state->screenH / 4) * 3),
         };
 
         Rectangle info_container = {
                 .x         = INFO_CONTAINERX,
                 .y         = INFO_CONTAINERY,
-                .width     = WIDTH / 2,
-                .height    = (HEIGHT / 4) * 3,
+                .width     = (int)(WIDTH / 2),
+                .height    = (int)(HEIGHT / 4) * 3,
         };
 
         Rectangle nav_container = {
@@ -161,9 +172,11 @@ Vector2 state_init(void)
         return (Vector2) { .x = WIDTH, .y = HEIGHT };
 }
 
-void state_load_font(char* font_path) 
+void state_load_font(char* font_path, int font_size) 
 {
-        if (state != NULL) state->font = LoadFont(font_path);
+        if (state != NULL) 
+                state->font = LoadFont(font_path);
+                // state->font = LoadFontEx(font_path, font_size, 0, 250);
 }
 
 void state_update(void)
@@ -202,17 +215,16 @@ void state_update(void)
                 }
                 // WUD NOTE: For next starting idx, mult 5 by page
 
+                Vector2 mouse_pos = GetMousePosition();
                 
                 // User clicked back or next button
                 if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
                 {
-                        Vector2 mouse_pos = GetMousePosition();
 
-                        if (CheckCollisionPointRec(mouse_pos, state->layout->back_button))
+                        if (CheckCollisionPointRec(mouse_pos, state->layout->back_button) &&
+                                                                state->ssids->page > 0)
                         {
-                                if (state->ssids->page > 0) {
-                                        state->ssids->page--;
-                                }
+                                state->ssids->page--;
                         }
                         else if (CheckCollisionPointRec(mouse_pos, state->layout->next_button)) 
                         {
@@ -221,6 +233,10 @@ void state_update(void)
                                 
                                 if (l_idx > s_idx)
                                         state->ssids->page++;
+                        }
+                        else
+                        {
+                                // check_ssid_clicked(&mouse_pos);
                         }
                 }
 

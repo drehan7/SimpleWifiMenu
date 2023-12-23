@@ -4,7 +4,7 @@ char** sys_get_ssids()
 {
         char** ssids = malloc(MAX_NETWORKS * sizeof(char*));
 
-        char* buff[256];
+        char buff[256];
 
         FILE* proc = popen("nmcli -f ssid device wifi list | tail -n +2", "r");
         if (proc == NULL)
@@ -17,6 +17,8 @@ char** sys_get_ssids()
         {
                 printf("WUD test: %s\n", buff);
         }
+
+        free(proc);
 
         return ssids;
 }

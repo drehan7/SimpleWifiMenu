@@ -12,6 +12,7 @@ build: $(TARGET)
 
 clean:
 	rm -r $(OBJ)/*
+	rm $(TARGET)
 	@#
 
 .PHONY: build clean

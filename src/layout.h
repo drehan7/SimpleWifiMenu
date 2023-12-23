@@ -48,8 +48,9 @@ typedef struct {
 
 
 Vector2 state_init(void);
+bool state_ok();
 void state_update(void);
-void state_load_font(char* font_path);
+void state_load_font(char* font_path, int font_size);
 
 void state_ssid_prev_page(void);
 void state_ssid_next_page(void);

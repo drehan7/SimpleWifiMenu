@@ -7,7 +7,7 @@ SSIDS* get_ssids(void)
         SSIDS* ssids_t = malloc(1 * sizeof(SSIDS));
 
         char** ssids = malloc(MAX_NETWORKS * sizeof(char*));
-        char* command = "nmcli -f ssid device wifi list | tail -n +2";
+        char* command = "nmcli -f ssid device wifi list | tail -n +2 | tail -n 49";
         FILE* proc = popen(command, "r");
                 #ifdef DEBUG
                         printf("running command: %s\n", command);
@@ -18,7 +18,7 @@ SSIDS* get_ssids(void)
                 return ssids_t;
         }
 
-        char* buff[80];
+        char buff[80];
         // TODO:
         //      SSIDS may repeat due to different channel OR signal
         //      Include channel if mult show up
@@ -47,6 +47,8 @@ SSIDS* get_ssids(void)
         ssids_t->ssid_list = ssids;
         ssids_t->page = 0;
 
+        // free(proc); free(command);
+
         return ssids_t;
 }
 
@@ -62,7 +64,7 @@ void refresh_ssids(SSIDS* s, size_t count)
                 s->ssid_list[i] = new_ssids->ssid_list[i];
         }
 
-        free(new_ssids);
+        // free(new_ssids);
 }
 
 int s_find(char** set, size_t set_l,  char* f)
