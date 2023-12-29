@@ -11,11 +11,13 @@ static State *state = NULL;
 // {
 // }
 
+// TODO: not sure what else to do with this
 bool state_ok()
 {
         return (!WindowShouldClose() && IsFontReady(state->font));
 }
 
+/* Loading text displayed while fetching networks*/
 void render_loading(void)
 {
         ClearBackground(BLACK);
@@ -194,12 +196,15 @@ void state_update(void)
         BeginDrawing();
 
                 // Draw containers and buttons
-                render_layout();
+                // render_layout();
 
                 // Starting Position for Wifi Networks
                 int x = SSID_CONTAINERX + 20;
                 int y = SSID_CONTAINERY + 20;
 
+                // TODO: render ssids in grid format
+
+                // TODO: organize this better
                 // Render Networks in ssid_container
                 size_t start_idx = state->ssids->page * 5;
                 size_t end_idx = (start_idx + 5 > state->ssids->count) ? state->ssids->count-1 : start_idx + 5;

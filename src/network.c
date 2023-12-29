@@ -24,7 +24,7 @@ SSIDS* get_ssids(void)
         //      Include channel if mult show up
         while (fgets(buff, sizeof buff, proc) != NULL)
         {
-                if (strstr(buff, "--") != NULL) continue;
+                if (strstr(buff, "--") != NULL) continue; // Null entry
                 size_t l = strlen(buff);
                 buff[l - 1] = '\0';
                 // if (!s_find(ssids, count, buff))
@@ -50,6 +50,14 @@ SSIDS* get_ssids(void)
         // free(proc); free(command);
 
         return ssids_t;
+}
+
+Network get_network_info(char* ssid)
+{
+        Network net;
+        char* command = "nmcli -f ssid device wifi list | tail -n +2 | tail -n 49";
+
+        return net;
 }
 
 void refresh_ssids(SSIDS* s, size_t count)

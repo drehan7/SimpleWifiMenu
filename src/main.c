@@ -17,8 +17,6 @@ int main()
 
         state_load_font(FONT_PATH);
 
-        printf("Before window open\n");
-        // while(!WindowShouldClose())
         while(state_ok())
         {
                 state_update();

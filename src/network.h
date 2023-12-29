@@ -24,6 +24,8 @@ typedef struct {
 
 SSIDS* get_ssids(void);
 
+Network get_network_info(char* ssid);
+
 void refresh_ssids(SSIDS* state, size_t count);
 char* get_connected_ssid(void); // UNIMPL
 
