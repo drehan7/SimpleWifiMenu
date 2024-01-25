@@ -52,13 +52,13 @@ SSIDS* get_ssids(void)
         return ssids_t;
 }
 
-Network get_network_info(char* ssid)
-{
-        Network net;
-        char* command = "nmcli -f ssid device wifi list | tail -n +2 | tail -n 49";
-
-        return net;
-}
+// Network get_network_info(char* ssid)
+// {
+//         Network net;
+//         char* command = "nmcli -f ssid device wifi list | tail -n +2 | tail -n 49";
+//
+//         return net;
+// }
 
 void refresh_ssids(SSIDS* s, size_t count)
 {
@@ -72,18 +72,17 @@ void refresh_ssids(SSIDS* s, size_t count)
                 s->ssid_list[i] = new_ssids->ssid_list[i];
         }
 
-        // free(new_ssids);
 }
 
 int s_find(char** set, size_t set_l,  char* f)
 {
-        printf("size: %ld\n", set_l);
+        // printf("size: %ld\n", set_l);
         int found = 0;
         if (set_l == 0) return found;
 
         for (size_t i = 0; i < set_l; ++i)
         {
-                printf("i: %ld Set[i]: %s\n", i, (char*)set[i]);
+                // printf("i: %ld Set[i]: %s\n", i, (char*)set[i]);
                 if (strcmp(set[i], f) != 0)
                 {
                         found = 1;

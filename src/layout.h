@@ -6,34 +6,40 @@
 #include <stdio.h>
 #include <string.h>
 #include "network.h"
+#include "scrolling.h"
 
+// Move these to some config ???
 #define MYCOLOR CLITERAL(Color){ 39,54,67,255 }
 
 #define WIDTH 1000
 #define HEIGHT 800
 
+#define MAX_PER_PAGE 5
+
 #define SSID_CONTAINERX 20
 #define SSID_CONTAINERY 50
+#define SSID_CONTAINERW (int)(WIDTH / 3)
+#define SSID_CONTAINERH (int)((HEIGHT / 4) * 3)
+#define SSID_MARGIN 20
 
 #define INFO_CONTAINERX 400
 #define INFO_CONTAINERY 50
+#define INFO_CONTAINERW (int)(WIDTH / 2)
+#define INFO_CONTAINERH (int)(HEIGHT / 4) * 3
 
-#define INFO_CONTAINERW 500
+#define SCROLL_SPEED 4
 
 
 typedef struct {
 
-        Rectangle ssid_container;
-        Rectangle info_container;
-        Rectangle nav_container;
         Rectangle back_button;
         Rectangle next_button;
 
 } PositionSettings;
 
-
 // State of application
 typedef struct {
+
         SSIDS* ssids;
 
         // Screen
@@ -44,27 +50,16 @@ typedef struct {
 
         // Containers
          PositionSettings* layout;
+         
 } State ;
-
 
 Vector2 state_init(void);
 bool state_ok();
 void state_update(void);
 void state_load_font(char* font_path);
 
-void state_ssid_prev_page(void);
-void state_ssid_next_page(void);
-
 void render_loading(void);
-void render_layout();
 
-void render_config_panel(void);
-void render_info_panel(void);
-
-PositionSettings* init_position_settings();
-
-
-
-
+PositionSettings* init_position_settings(size_t ssid_count);
 
 #endif //_LAYOUT_H

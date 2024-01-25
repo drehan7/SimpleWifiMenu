@@ -47,7 +47,7 @@ if [ `echo $result | grep -i "success" | wc -l` -gt 0 ];then
 elif [ `echo $result | grep -i "nothing to be done" | wc -l` -gt 0 ]; then
 
         echo "No changes";
-        [ $run -eq 1 ] && ./out;
+        # [ $run -eq 1 ] && ./out;
         success=1
 else
         success=0

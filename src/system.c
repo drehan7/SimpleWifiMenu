@@ -18,7 +18,6 @@ char** sys_get_ssids()
                 printf("WUD test: %s\n", buff);
         }
 
-        free(proc);
 
         return ssids;
 }
