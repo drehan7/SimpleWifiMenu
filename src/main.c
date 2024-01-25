@@ -14,6 +14,7 @@ int main()
         Vector2 screenXY = state_init();
         // SetConfigFlags(FLAG_WINDOW_RESIZABLE);
         InitWindow(screenXY.x, screenXY.y, "WiFi Gui");
+        SetTargetFPS(60);
 
         state_load_font(FONT_PATH);
 
