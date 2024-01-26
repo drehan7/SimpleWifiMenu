@@ -69,7 +69,7 @@ ScrollingComponent* init_scrolling_component(Rectangle layout, size_t ssid_count
         return scmpt;
 }
 
-void update_scrolling_container(ScrollingComponent* sc)
+void update_scrolling_container(ScrollingComponent* sc, SSIDS* ssids)
 {
         // TODO: move this to define
         int ss = 6; // scroll speed
@@ -93,6 +93,12 @@ void update_scrolling_container(ScrollingComponent* sc)
 
                         Color c = (i % 2 == 0) ? RED : BLUE;
                         DrawRectangleLinesEx(sc->items[i], 0.7f, c);
+                        char* rtext = ssids->ssid_list[i];
+                        int x = sc->items[i].x + strlen(rtext);
+                        int y = (sc->items[i].y + (sc->items[i].height / 3));
+
+                        DrawText(rtext, x, y, 15, ORANGE);
+
                 }
 
         }

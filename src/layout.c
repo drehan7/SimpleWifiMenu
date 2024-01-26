@@ -128,7 +128,7 @@ void state_update(void)
                 int x = SSID_CONTAINERX + SSID_MARGIN;
                 int y = SSID_CONTAINERY + SSID_MARGIN;
 
-                update_scrolling_container(m_ScrollContainer);
+                update_scrolling_container(m_ScrollContainer, state->ssids);
                 
                 Vector2 mouse_pos = GetMousePosition();
                 
