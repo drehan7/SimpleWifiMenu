@@ -31,6 +31,8 @@ if [ ! -e $log ];then
     touch $log
 fi
 
+[ ! -e Objs ] && mkdir Objs
+
 if [ $debug -eq 1 ]; then
         make --debug &> $log
 else

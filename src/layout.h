@@ -54,11 +54,13 @@ typedef struct {
 } State ;
 
 Vector2 state_init(void);
-bool state_ok();
+bool state_ok(void);
 void state_update(void);
 void state_load_font(char* font_path);
 
 void render_loading(void);
+
+void update_info_container(void);
 
 PositionSettings* init_position_settings(size_t ssid_count);
 

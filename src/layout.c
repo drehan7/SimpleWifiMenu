@@ -78,11 +78,13 @@ PositionSettings* init_position_settings(size_t ssid_count)
 Vector2 state_init(void)
 {
         state = malloc(sizeof(*state));
+
         if (state == NULL) 
         {
                 printf("Error: Could not allocate enough memory.");
                 exit(1);
         }
+
         memset(state, 0, sizeof(*state));
 
         SSIDS* _ssids = get_ssids();
@@ -108,6 +110,19 @@ Vector2 state_init(void)
         return (Vector2) { .x = WIDTH, .y = HEIGHT };
 }
 
+void update_info_container()
+{
+        int ssidx = m_ScrollContainer->selected_idx;
+        if ( ssidx == -1 ) return;
+
+        char* sname = state->ssids->ssid_list[ssidx];
+
+        int x = m_InfoContainer.x + ((m_InfoContainer.width / 2) - strlen(sname));
+        int y = m_InfoContainer.y + m_InfoContainer.height / 3;
+
+        DrawText(sname, x, y, 25, SKYBLUE);
+}
+
 void state_load_font(char* font_path) 
 {
         if (state != NULL) 
@@ -129,6 +144,8 @@ void state_update(void)
                 int y = SSID_CONTAINERY + SSID_MARGIN;
 
                 update_scrolling_container(m_ScrollContainer, state->ssids);
+
+                update_info_container();
                 
                 Vector2 mouse_pos = GetMousePosition();
                 
@@ -142,6 +159,8 @@ void state_update(void)
                 if (IsKeyPressed(KEY_Q)) {
                         exit(1);
                 }
+
+                DrawRectangleLinesEx(m_InfoContainer, 0.7f, SKYBLUE);
 
                 render_page_count();
 
