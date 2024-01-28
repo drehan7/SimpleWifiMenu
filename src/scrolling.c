@@ -1,5 +1,7 @@
 #include "scrolling.h"
 
+// TODO: Add a scroll bar
+
 /*
  Check bounds of first and last 
  item to make sure we are within the container
@@ -24,7 +26,8 @@ bool check_scrolling(ScrollingComponent* sc, int scroll_move)
                 do_scroll = false;
         }
 
-        return do_scroll;
+        Vector2 mp = GetMousePosition();
+        return (do_scroll && CheckCollisionPointRec(mp, sc->pc));
 }
 
 bool show_rect(Rec r, Rec layout)
@@ -69,10 +72,10 @@ ScrollingComponent* init_scrolling_component(Rec layout, size_t ssid_count)
         return scmpt;
 }
 
-void update_scrolling_container(ScrollingComponent* sc, SSIDS* ssids)
+void update_scrolling_component(ScrollingComponent* sc, SSIDS* ssids)
 {
         // TODO: move this to define
-        int ss = 6; // scroll speed
+        int ss = SCROLLSPEED; // scroll speed
 
         DrawRectangleLinesEx(sc->pc, 0.7f, BLACK);
 

@@ -1,12 +1,12 @@
 #ifndef _LAYOUT_H
 #define _LAYOUT_H
-#include <raylib.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "network.h"
 #include "scrolling.h"
+#include "info.h"
 
 // Move these to some config ???
 #define MYCOLOR CLITERAL(Color){ 39,54,67,255 }
@@ -27,8 +27,6 @@
 #define INFO_CONTAINERW (int)(WIDTH / 2)
 #define INFO_CONTAINERH (int)(HEIGHT / 4) * 3
 
-#define SCROLL_SPEED 4
-
 
 typedef struct {
 
@@ -39,6 +37,7 @@ typedef struct {
 
 // State of application
 typedef struct {
+        bool ready;
 
         SSIDS* ssids;
 
@@ -59,8 +58,6 @@ void state_update(void);
 void state_load_font(char* font_path);
 
 void render_loading(void);
-
-void update_info_container(void);
 
 PositionSettings* init_position_settings(size_t ssid_count);
 

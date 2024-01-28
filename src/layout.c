@@ -1,23 +1,13 @@
 #include "layout.h"
 
 static State *state = NULL;
-static ScrollingComponent *m_ScrollContainer = NULL;
-static Rectangle m_InfoContainer;
+static ScrollingComponent *m_ScrollComponent = NULL;
+static InfoComponent* m_InfoComponent = NULL;
 static Rectangle m_NavContainer;
 
-// void state_ssid_prev_page(void)
-// {
-// // TODO: impl
-// }
-
-// void check_ssid_clicked(Vector2* mouse_pos)
-// {
-// }
-
 // TODO: not sure what else to do with this
-bool state_ok()
-{
-        return (!WindowShouldClose() && IsFontReady(state->font));
+bool state_ok() {
+        return (state->ready && !WindowShouldClose() && IsFontReady(state->font));
 }
 
 /* Loading text displayed while fetching networks*/
@@ -57,12 +47,12 @@ PositionSettings* init_position_settings(size_t ssid_count)
                 exit(1);
         }
 
-        m_InfoContainer = (Rectangle) {
-                .x         = INFO_CONTAINERX,
-                .y         = INFO_CONTAINERY,
-                .width     = (int)(WIDTH / 2),
-                .height    = (int)(HEIGHT / 4) * 3,
-        };
+        // m_InfoContainer = (Rectangle) {
+        //         .x         = INFO_CONTAINERX,
+        //         .y         = INFO_CONTAINERY,
+        //         .width     = (int)(WIDTH / 2),
+        //         .height    = (int)(HEIGHT / 4) * 3,
+        // };
 
         m_NavContainer = (Rectangle) {
                 .x         = SSID_CONTAINERX,
@@ -92,6 +82,7 @@ Vector2 state_init(void)
         state->screenW = WIDTH;
         state->screenH = HEIGHT;
         state->appcolor = MYCOLOR;
+        state->ready = false;
 
         state->layout = init_position_settings(_ssids->count);
 
@@ -102,26 +93,40 @@ Vector2 state_init(void)
                 .height    = SSID_CONTAINERH
         };
 
-        m_ScrollContainer = init_scrolling_component(scroll_layout, _ssids->count);
+        Rectangle _layout = {
+                .x         = INFO_CONTAINERX,
+                .y         = INFO_CONTAINERY,
+                .width     = INFO_CONTAINERW,
+                .height    = INFO_CONTAINERH,
+        };
+
+        m_ScrollComponent = init_scrolling_component(scroll_layout, _ssids->count);
+        m_InfoComponent = init_info_component(_layout);
 
         printf("State init complete: %ld\n", _ssids->count);
+        state->ready = true;
 
 
         return (Vector2) { .x = WIDTH, .y = HEIGHT };
 }
 
-void update_info_container()
-{
-        int ssidx = m_ScrollContainer->selected_idx;
-        if ( ssidx == -1 ) return;
-
-        char* sname = state->ssids->ssid_list[ssidx];
-
-        int x = m_InfoContainer.x + ((m_InfoContainer.width / 2) - strlen(sname));
-        int y = m_InfoContainer.y + m_InfoContainer.height / 3;
-
-        DrawText(sname, x, y, 25, SKYBLUE);
-}
+// void update_info_container()
+// {
+//         int ssidx = m_ScrollContainer->selected_idx;
+//         char* sname;
+//         Rectangle ic_layout = m_InfoContainer->layout;
+//         int x = ic_layout.x + ((ic_layout.width / 2) - strlen(sname));
+//         int y = ic_layout.y + ic_layout.height / 3;
+//
+//         if ( ssidx >= 0 ) {
+//                 sname = state->ssids->ssid_list[ssidx];
+//         } else {
+//                 sname = "Click network.";
+//         }
+//
+//
+//         DrawText(sname, x, y, 25, SKYBLUE);
+// }
 
 void state_load_font(char* font_path) 
 {
@@ -143,24 +148,17 @@ void state_update(void)
                 int x = SSID_CONTAINERX + SSID_MARGIN;
                 int y = SSID_CONTAINERY + SSID_MARGIN;
 
-                update_scrolling_container(m_ScrollContainer, state->ssids);
-
-                update_info_container();
+                // Update Components
+                update_scrolling_component(m_ScrollComponent, state->ssids);
+                update_info_component(m_InfoComponent, state->ssids, m_ScrollComponent->selected_idx);
                 
-                Vector2 mouse_pos = GetMousePosition();
-                
-                // User clicked back or next button
-                // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-                // {
-                //
-                // }
 
+                // Vector2 mouse_pos = GetMousePosition();
+                
                 // EXIT PROGRAM
                 if (IsKeyPressed(KEY_Q)) {
                         exit(1);
                 }
-
-                DrawRectangleLinesEx(m_InfoContainer, 0.7f, SKYBLUE);
 
                 render_page_count();
 
