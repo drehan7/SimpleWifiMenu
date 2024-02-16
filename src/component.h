@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include "network.h"
 
+/*
+  Central header file to avoid including the same libs
+  ex raylib
+*/
+
 typedef Rectangle Rec;
 
 typedef struct {

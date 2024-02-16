@@ -26,11 +26,6 @@ InfoComponent* init_info_component(Rectangle layout)
 void update_title(Title* t, SSIDS* ssids, size_t idx)
 {
         DrawRectangleLinesEx(t->layout, 0.7f, GREEN);
-
-        if (idx >= 0 && idx < ssids->count) 
-        {
-                t->text = ssids->ssid_list[idx];
-        } 
         DrawText(t->text, t->layout.width, t->layout.height, 30, BLACK);
 }
 
